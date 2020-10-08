@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+
+  eureka:
+    image: brunosilva1988/eureka
+    ports: 
+      - 8761:8761
+    networks: 
+      - minha-rede
+    deploy:
+      replicas: 2
+      restart-deploy: on-failure
+      placement:
+        constraints: [node.role == manager]
+
+networks:
+  minha-rede:
