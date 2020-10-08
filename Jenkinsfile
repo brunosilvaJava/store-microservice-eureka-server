@@ -26,7 +26,7 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                sh 'docker build -t brunosilva1988/eureka'
+                sh 'docker build -t brunosilva1988/eureka .'
                 sh 'docker push brunosilva1988/eureka'
             }
         }
