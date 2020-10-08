@@ -1,5 +1,11 @@
 pipeline {
 
+    environment {
+        registry = "brunosilva1988/eureka"
+        registryCredential = 'dockerhub_id'
+        dockerImage = ''
+    }
+
     agent any // defini qual agente irá executar o pipeline. any -> primeiro ambiente disponível (Jenkins Master - Própria máquina)
 
     stages {
@@ -26,18 +32,13 @@ pipeline {
         }
         stage('Build image') {
             steps {
-                sh 'docker build -t brunosilva1988/eureka .'
+                dockerImage = docker.build registry + ":$BUILD_NUMBER"
             }
         }
         stage('Push image') {
             steps {
-                withCredentials([usernamePassword( credentialsId: 'docker-hub-credentials', usernameVariable: 'brunosilva1988', passwordVariable: 'bts09081988')]) {
-                    def registry_url = "registry.hub.docker.com/"
-                    bat "docker login -u $USER -p $PASSWORD ${registry_url}"
-                    docker.withRegistry("http://${registry_url}", "docker-hub-credentials") {
-                        sh 'docker push brunosilva1988/eureka'
-                    }
-                }
+                docker.withRegistry('', registryCredential) {
+                dockerImage.push()
             }
         }
         stage('Deploy') {
