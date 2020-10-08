@@ -33,7 +33,7 @@ pipeline {
             withCredentials([usernamePassword( credentialsId: 'docker-hub-credentials', usernameVariable: 'brunosilva1988', passwordVariable: 'bts09081988')]) {
                 def registry_url = "registry.hub.docker.com/"
                 bat "docker login -u $USER -p $PASSWORD ${registry_url}"
-                do  cker.withRegistry("http://${registry_url}", "docker-hub-credentials") {
+                docker.withRegistry("http://${registry_url}", "docker-hub-credentials") {
                     sh 'docker push brunosilva1988/eureka'
                 }
             }
