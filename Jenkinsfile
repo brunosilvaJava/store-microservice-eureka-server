@@ -5,17 +5,17 @@ pipeline {
     stages {
         stage('Clean') {
             steps {
-                echo "./mvnw clean"
+                sh "./mvnw clean"
             }
         }
         stage("Build") {
             steps {
-                echo "./mvnw package"
+                sh "./mvnw package"
             }
         }
         stage('Test') {
             steps {
-                echo "./mvnw test"
+                sh "./mvnw test"
             }
         }
         stage('JaCoCo') {
@@ -26,14 +26,13 @@ pipeline {
         }
         stage('Docker build') {
             steps {
-                echo 'Docker build'
-                echo 'docker build -t brunosilva1988/eureka'
-                echo 'docker push brunosilva1988/eureka'
+                sh 'docker build -t brunosilva1988/eureka'
+                sh 'docker push brunosilva1988/eureka'
             }
         }
         stage('Deploy') {
             steps {
-                echo "docker stack deploy --compose-file docker-compose.yml store"
+                sh "docker stack deploy --compose-file docker-compose.yml store"
             }
         }
     }
