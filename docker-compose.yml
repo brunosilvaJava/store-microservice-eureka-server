@@ -10,7 +10,8 @@ services:
       - minha-rede
     deploy:
       replicas: 2
-      restart_policy: on-failure
+      restart_policy:
+        condition: on-failure
       placement:
         constraints: [node.role == manager]
 
