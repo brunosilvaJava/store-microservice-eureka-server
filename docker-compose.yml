@@ -1,4 +1,4 @@
-version: "3"
+version: "3.3"
 
 services:
 
@@ -9,11 +9,76 @@ services:
     networks: 
       - minha-rede
     deploy:
-      replicas: 2
+      replicas: 3
       restart_policy:
         condition: on-failure
       placement:
         constraints: [node.role == manager]
+
+  auth:
+    image: brunosilva1988/auth
+    ports:
+      - 8088:8088
+    networks:
+      - minha-rede
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == manager ]
+
+  mongodb:
+    image: mongo
+    networks:
+      - minha-rede
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == worker ]
+
+  product:
+    image: brunosilva1988/product
+    ports:
+      - 6161:6161
+    networks:
+      - minha-rede
+    depends_on:
+      - mongodb
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == worker ]
+
+  client:
+    image: brunosilva1988/client
+    ports:
+      - 6060:6060
+    networks:
+      - minha-rede
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == worker ]
+
+  sale:
+    image: brunosilva1988/sale
+    ports:
+      - 6262:6262
+    networks:
+      - minha-rede
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [ node.role == worker ]
 
 networks:
   minha-rede:
